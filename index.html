@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konfi- & Jugendkalender 2026 / 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFAF6;--paper-2:#F3F0E8;--ink:#241B2E;--ink-soft:#6B6274;
+    --line:#E4DFD3;--line-strong:#D3CCBC;
+    --konfikurs:#2E6E7A;--gottesdienst:#7A5AA6;--freizeit:#4E8A5C;
+    --fest:#C6892E;--eltern:#B85C3C;--termin:#5B6B7B;--jugend:#C4457A;--pause:#A69F94;
+    --radius:14px;--shadow:0 1px 2px rgba(36,27,46,.04),0 8px 24px rgba(36,27,46,.06);--maxw:820px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px;}
+
+  header.hero{padding:60px 0 30px;border-bottom:1px solid var(--line);position:relative;overflow:hidden;}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin:0 0 18px;}
+  h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(34px,7vw,58px);line-height:1.02;letter-spacing:-.01em;margin:0 0 18px;}
+  h1 em{font-style:italic;color:var(--konfikurs);}
+  .hero-sub{font-size:16px;color:var(--ink-soft);max-width:46ch;margin:0 0 26px;}
+  .countdown{display:inline-flex;align-items:baseline;gap:12px;background:var(--ink);color:var(--paper);padding:14px 20px;border-radius:999px;box-shadow:var(--shadow);}
+  .countdown .num{font-family:'Fraunces',serif;font-weight:600;font-size:28px;line-height:1;color:#F1C87A;}
+  .countdown .lbl{font-size:13.5px;}
+  .countdown .lbl b{color:var(--paper);font-weight:600;}
+
+  /* Track selector */
+  .track-bar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:22px 0 4px;}
+  .track-seg{display:inline-flex;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:4px;}
+  .track-seg button{border:0;background:transparent;cursor:pointer;font-family:inherit;font-size:14px;font-weight:500;color:var(--ink-soft);padding:9px 20px;border-radius:999px;transition:all .18s ease;display:inline-flex;align-items:center;gap:8px;}
+  .track-seg button .d{width:9px;height:9px;border-radius:50%;}
+  .track-seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 2px rgba(36,27,46,.08);}
+  .track-note{font-size:12.5px;color:var(--ink-soft);}
+
+  .controls{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between;padding:14px 0 6px;}
+  .toggle{display:inline-flex;background:var(--paper-2);border-radius:999px;padding:4px;border:1px solid var(--line);}
+  .toggle button{border:0;background:transparent;cursor:pointer;font-family:inherit;font-size:14px;font-weight:500;color:var(--ink-soft);padding:8px 18px;border-radius:999px;transition:all .18s ease;}
+  .toggle button[aria-selected="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 2px rgba(36,27,46,.08);}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:12.5px;font-weight:500;color:var(--ink);background:var(--paper-2);border:1px solid var(--line);padding:6px 12px;border-radius:999px;transition:opacity .18s ease,filter .18s ease;user-select:none;}
+  .chip .dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none;}
+  .chip[aria-pressed="false"]{opacity:.38;filter:grayscale(.4);}
+
+  main{padding:8px 0 40px;}
+  .month-group{margin-top:30px;}
+  .month-head{display:flex;align-items:baseline;gap:12px;font-family:'Fraunces',serif;font-weight:500;font-size:22px;padding-bottom:10px;margin-bottom:4px;}
+  .month-head span{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--ink-soft);letter-spacing:.06em;}
+  .timeline{position:relative;padding-left:30px;}
+  .timeline::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--line-strong),var(--line));border-radius:2px;}
+  .event{position:relative;display:flex;gap:16px;align-items:flex-start;padding:14px 0;}
+  .event::before{content:"";position:absolute;left:-30px;top:20px;width:14px;height:14px;border-radius:50%;background:var(--paper);border:3px solid var(--c);box-shadow:0 0 0 4px var(--paper);}
+  .event.special::before{width:16px;height:16px;left:-31px;background:var(--c);}
+  .event.both::before{background:conic-gradient(var(--c) 0 50%,var(--jugend) 0 100%);border-color:var(--paper);}
+  .event.pause::before{background:var(--pause);border-color:var(--paper);width:12px;height:12px;}
+  .event.pause .card{background:var(--paper-2);border-style:dashed;box-shadow:none;}
+  .event.pause .card:hover{transform:none;box-shadow:none;}
+  .event.pause .card h3{font-weight:500;color:var(--ink-soft);}
+  .event.pause .date-block .dd{color:var(--ink-soft);}
+  .date-block{flex:none;width:64px;text-align:center;padding-top:1px;}
+  .date-block .dow{font-size:11px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;}
+  .date-block .dd{font-family:'Fraunces',serif;font-size:26px;font-weight:500;line-height:1.05;}
+  .date-block .range{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+  .card{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:13px 16px;box-shadow:var(--shadow);transition:transform .16s ease,box-shadow .16s ease;}
+  .card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(36,27,46,.05),0 14px 30px rgba(36,27,46,.09);}
+  .card .title-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .card h3{font-size:16px;font-weight:600;margin:0;}
+  .tag{font-size:11px;font-weight:600;color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);padding:3px 9px;border-radius:999px;flex:none;}
+  .track-tag{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:3px 8px;border-radius:999px;flex:none;}
+  .track-tag.jugend{color:var(--jugend);background:color-mix(in srgb,var(--jugend) 13%,transparent);}
+  .track-tag.both{color:#fff;background:linear-gradient(90deg,var(--konfikurs),var(--jugend));}
+  .card .meta{font-size:13px;color:var(--ink-soft);margin-top:4px;}
+  .card .note{font-size:13.5px;color:var(--ink);margin-top:6px;opacity:.85;}
+  .card .ev-link{display:inline-block;margin-top:9px;font-size:12.5px;font-weight:600;color:var(--c);text-decoration:none;}
+  .card .ev-link:hover{text-decoration:underline;}
+  .card .ev-link::after{content:" ↗";}
+  .card.hl{border-color:var(--fest);background:linear-gradient(180deg,#FFFDF7,var(--paper));}
+
+  .empty-state{text-align:center;color:var(--ink-soft);font-size:14.5px;padding:50px 20px;border:1px dashed var(--line-strong);border-radius:var(--radius);margin-top:24px;background:var(--paper-2);}
+
+  .cal{display:none;margin-top:22px;}
+  .cal.active{display:block;}
+  .agenda.hidden{display:none;}
+  .cal-nav{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:14px;}
+  .cal-nav button{border:1px solid var(--line);background:var(--paper);cursor:pointer;width:38px;height:38px;border-radius:50%;font-size:17px;color:var(--ink);display:grid;place-items:center;transition:background .15s ease;}
+  .cal-nav button:hover:not(:disabled){background:var(--paper-2);}
+  .cal-nav button:disabled{opacity:.3;cursor:default;}
+  .cal-title{font-family:'Fraunces',serif;font-size:22px;font-weight:500;min-width:200px;text-align:center;}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+  .grid .wd{text-align:center;font-size:11px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;padding:4px 0 8px;}
+  .cell{min-height:78px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px 7px;display:flex;flex-direction:column;gap:4px;}
+  .cell.empty{background:transparent;border:0;}
+  .cell .n{font-size:12.5px;font-weight:600;color:var(--ink-soft);}
+  .cell.has .n{color:var(--ink);}
+  .ev-pill{font-size:10.5px;font-weight:600;line-height:1.2;color:#fff;background:var(--c);padding:3px 6px;border-radius:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;position:relative;}
+  .ev-pill.both{background:linear-gradient(90deg,var(--konfikurs),var(--jugend));}
+  .ev-pill.pause{background:var(--pause);color:#3E3930;font-weight:600;}
+
+  .open-sec{margin-top:44px;padding-top:26px;border-top:1px solid var(--line);}
+  .open-sec h2{font-family:'Fraunces',serif;font-weight:500;font-size:20px;margin:0 0 4px;}
+  .open-sec p.hint{font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;}
+  .open-list{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+  .open-item{border:1px dashed var(--line-strong);border-radius:var(--radius);padding:13px 15px;background:var(--paper-2);}
+  .open-item .title-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;}
+  .open-item h3{font-size:15px;font-weight:600;margin:0;}
+  .open-item .when{font-size:12.5px;color:var(--ink-soft);}
+
+  footer{padding:30px 0 48px;color:var(--ink-soft);font-size:12.5px;border-top:1px solid var(--line);margin-top:20px;}
+  .fade{opacity:0;transform:translateY(8px);animation:rise .5s ease forwards;}
+  @keyframes rise{to{opacity:1;transform:none;}}
+
+  @media (max-width:560px){
+    header.hero{padding:42px 0 24px;}
+    .date-block{width:52px;}.date-block .dd{font-size:22px;}
+    .cell{min-height:60px;}.ev-pill{font-size:9.5px;}
+    .track-seg button{padding:9px 15px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero fade">
+    <p class="eyebrow">Jahresplan 2026 / 2027</p>
+    <h1>Konfi &amp; <em>Jugend</em></h1>
+    <p class="hero-sub">Alle Termine auf einen Blick. Wähle oben, ob du Konfi-, Jugend- oder alle Termine sehen möchtest.</p>
+    <div class="countdown" id="countdown">
+      <span class="num" id="cd-num">–</span>
+      <span class="lbl" id="cd-lbl">wird berechnet …</span>
+    </div>
+  </header>
+
+  <div class="track-bar fade" style="animation-delay:.04s">
+    <div class="track-seg" role="group" aria-label="Terminart">
+      <button id="tk-all"    aria-pressed="true">Beides</button>
+      <button id="tk-konfi"  aria-pressed="false"><span class="d" style="background:var(--konfikurs)"></span>Konfi</button>
+      <button id="tk-jugend" aria-pressed="false"><span class="d" style="background:var(--jugend)"></span>Jugend</button>
+    </div>
+    <span class="track-note" id="track-note"></span>
+  </div>
+
+  <div class="controls fade" style="animation-delay:.08s">
+    <div class="toggle" role="tablist" aria-label="Ansicht">
+      <button id="tab-agenda" role="tab" aria-selected="true">Agenda</button>
+      <button id="tab-cal" role="tab" aria-selected="false">Kalender</button>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <main>
+    <div class="agenda" id="agenda"></div>
+    <div class="cal" id="cal">
+      <div class="cal-nav">
+        <button id="prev" aria-label="Vorheriger Monat">‹</button>
+        <div class="cal-title" id="cal-title"></div>
+        <button id="next" aria-label="Nächster Monat">›</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+    <section class="open-sec fade" style="animation-delay:.12s" id="open-sec"></section>
+  </main>
+
+  <footer>Konfikurs-Stunden: freitags 17:00–19:00. Termine mit beiden Farben zählen zu Konfi und Jugend.</footer>
+</div>
+
+<script>
+const CATS = {
+  konfikurs:   {label:'Konfikurs',       color:'var(--konfikurs)'},
+  gottesdienst:{label:'Gottesdienst',    color:'var(--gottesdienst)'},
+  freizeit:    {label:'Freizeit & Camp', color:'var(--freizeit)'},
+  fest:        {label:'Fest',            color:'var(--fest)'},
+  eltern:      {label:'Elternabend',     color:'var(--eltern)'},
+  termin:      {label:'Termin',          color:'var(--termin)'},
+  jugendabend: {label:'Jugendabend',     color:'var(--jugend)'},
+  pause:       {label:'Kein Jugendabend',color:'var(--pause)'},
+};
+
+// track: 'konfi' | 'jugend' | 'both'
+const EVENTS = [
+  {date:'2026-09-22', time:'19:00',       title:'Elternabend', note:'Termine, Infos, Kennenlernen', cat:'eltern', track:'konfi'},
+  {date:'2026-10-16', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2026-10-30', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2026-11-08', time:'9:30',        title:'Konfivorstellung im Gottesdienst', cat:'gottesdienst', track:'konfi'},
+  {date:'2026-11-13', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2026-11-27', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2026-12-11', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2026-12-18', time:'18:00',       title:'Weihnachtsfeier mit Jugend', cat:'fest', track:'both'},
+  {date:'2027-01-08', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2027-01-16', end:'2027-01-17',   title:'Konfiübernachtung in der Gemeinde', cat:'freizeit', track:'konfi'},
+  {date:'2027-01-22', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2027-02-05', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2027-02-26', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2027-03-04', end:'2027-03-07',   title:'Konfifreizeit Schloss Klaus', cat:'freizeit', track:'konfi'},
+  {date:'2027-03-19', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2027-04-09', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2027-04-10',                     title:'OÖ Konfitag', note:'Wallern', cat:'termin', track:'konfi', link:'https://www.ejooe.at/konfitag'},
+  {date:'2027-02-12', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2027-05-07', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2027-05-14', time:'17:00–19:00', title:'Konfikurs', cat:'konfikurs', track:'konfi'},
+  {date:'2027-05-16',                     title:'Konfirmation', cat:'fest', track:'konfi', hl:true},
+
+  // --- Jugendabende (freitags, wöchentlich) ---
+  {date:'2026-09-18', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-09-25', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-10-02', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-10-09', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-10-16', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-10-23', end:'2026-10-26', title:'ej qualifies Wochenende', note:'ab 14 Jahren · Bad Goisern', cat:'freizeit', track:'jugend', link:'https://www.ejooe.at/ejqualifies/ej-qualifies-wochenende'},
+  {date:'2026-10-30', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-11-06', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-11-13', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-11-20', end:'2026-11-22', title:'YLS – Young Leaders’ Summit', note:'Schloss Klaus', cat:'freizeit', track:'jugend', link:'https://yls.at/'},
+  {date:'2026-11-27', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-12-04', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2026-12-11', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  // 2026-12-18: Weihnachtsfeier -> steht oben als Konfi+Jugend
+  {date:'2026-12-25', title:'Kein Jugendabend', note:'Weihnachtspause', cat:'pause', track:'jugend'},
+  {date:'2027-01-01', title:'Kein Jugendabend', note:'Weihnachtspause', cat:'pause', track:'jugend'},
+  {date:'2027-01-08', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-01-15', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-01-22', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-01-29', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-02-05', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-02-12', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-02-19', title:'Kein Jugendabend', note:'Semesterpause', cat:'pause', track:'jugend'},
+  {date:'2027-02-26', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-03-05', title:'Kein Jugendabend', note:'Konfis & Mitarbeiter am Schloss (unsicher)', cat:'pause', track:'jugend'},
+  {date:'2027-03-12', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-03-19', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-03-26', title:'Kein Jugendabend', note:'Osterpause', cat:'pause', track:'jugend'},
+  {date:'2027-04-02', end:'2027-04-04', title:'OÖ MA-Tage', note:'ab 16 Jahren · Bad Goisern', cat:'freizeit', track:'jugend', link:'https://www.ejooe.at/fuer-mitarbeitende-1/mitarbeitenden-tage'},
+  {date:'2027-04-09', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-04-16', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-04-23', end:'2027-04-25', title:'Schladminger Jugendtag', note:'Schladming', cat:'freizeit', track:'both', link:'https://schladminger-jugendtag.at/'},
+  {date:'2027-05-07', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-05-14', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-05-21', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-05-28', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-06-04', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-06-11', end:'2027-06-13', title:'Gemeindefreizeit', cat:'freizeit', track:'both'},
+  {date:'2027-06-18', title:'Ausflug: Celebration of Hope', note:'Linz · Will Graham · Termin noch unsicher', cat:'termin', track:'jugend', link:'https://billygraham.org/de/events/linz-austria'},
+  {date:'2027-06-25', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-07-02', time:'19:00', title:'Jugendabend', cat:'jugendabend', track:'jugend'},
+  {date:'2027-07-09', time:'19:00', title:'Jugendabend', note:'Grillen?', cat:'jugendabend', track:'jugend'},
+  {date:'2027-05-10', title:'Elternabend für Konfirmation', cat:'eltern', track:'konfi'},
+  {date:'2027-04-30', end:'2027-05-04', title:'Konfi- & Jugendwochenende', note:'Bad Goisern · unter Vorbehalt', cat:'freizeit', track:'both'},
+];
+
+const OPEN = [];
+
+const DOW=['So','Mo','Di','Mi','Do','Fr','Sa'];
+const MONTHS=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const SPECIAL=new Set(['gottesdienst','freizeit','fest','eltern','termin']);
+const parse=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
+const tmin=e=>{if(!e.time)return 0;const mm=e.time.match(/(\d{1,2}):(\d{2})/);return mm?(+mm[1]*60+ +mm[2]):0;};
+
+let trackFilter='all';                       // 'all' | 'konfi' | 'jugend'
+const active=new Set(Object.keys(CATS));      // category filters
+
+function matchesTrack(e){
+  if(trackFilter==='all') return true;
+  return e.track===trackFilter || e.track==='both';
+}
+function visible(e){ return matchesTrack(e) && active.has(e.cat); }
+
+/* Countdown */
+function countdown(){
+  const target=parse('2027-05-16'); const now=new Date(); now.setHours(0,0,0,0);
+  const days=Math.round((target-now)/86400000);
+  const n=document.getElementById('cd-num'), l=document.getElementById('cd-lbl');
+  if(days>0){n.textContent=days;l.innerHTML='Tage bis zur <b>Konfirmation</b> · 16. Mai 2027';}
+  else if(days===0){n.textContent='Heute';l.innerHTML='ist die <b>Konfirmation</b>! · 16. Mai 2027';}
+  else{n.textContent='✓';l.innerHTML='<b>Konfirmation</b> gefeiert · 16. Mai 2027';}
+}
+
+/* Track selector */
+const tkAll=document.getElementById('tk-all'),tkKonfi=document.getElementById('tk-konfi'),tkJugend=document.getElementById('tk-jugend');
+function setTrack(t){
+  trackFilter=t;
+  tkAll.setAttribute('aria-pressed',t==='all');
+  tkKonfi.setAttribute('aria-pressed',t==='konfi');
+  tkJugend.setAttribute('aria-pressed',t==='jugend');
+  const note=document.getElementById('track-note');
+  const jugendCount=EVENTS.filter(e=>e.track==='jugend').length;
+  note.textContent = (t==='jugend'&&jugendCount===0)
+    ? 'Noch keine reinen Jugendtermine eingetragen.' : '';
+  renderAgenda(); renderGrid();
+}
+tkAll.onclick=()=>setTrack('all'); tkKonfi.onclick=()=>setTrack('konfi'); tkJugend.onclick=()=>setTrack('jugend');
+
+/* Legend */
+function renderLegend(){
+  const el=document.getElementById('legend'); el.innerHTML='';
+  for(const[key,c]of Object.entries(CATS)){
+    const b=document.createElement('button');
+    b.className='chip'; b.style.setProperty('--c',c.color);
+    b.setAttribute('aria-pressed','true');
+    b.innerHTML=`<span class="dot"></span>${c.label}`;
+    b.onclick=()=>{
+      if(active.has(key)){active.delete(key);b.setAttribute('aria-pressed','false');}
+      else{active.add(key);b.setAttribute('aria-pressed','true');}
+      renderAgenda(); renderGrid();
+    };
+    el.appendChild(b);
+  }
+}
+
+function trackTag(e){
+  if(e.track==='both') return '<span class="track-tag both">Konfi + Jugend</span>';
+  return '';
+}
+
+/* Agenda */
+function renderAgenda(){
+  const root=document.getElementById('agenda'); root.innerHTML='';
+  const list=EVENTS.filter(visible);
+  if(!list.length){ root.innerHTML='<div class="empty-state">Für diese Auswahl gibt es keine Termine.</div>'; return; }
+  const groups={};
+  list.forEach(e=>{const d=parse(e.date);const k=d.getFullYear()+'-'+d.getMonth();(groups[k]=groups[k]||[]).push(e);});
+  Object.keys(groups).sort((a,b)=>{const[ay,am]=a.split('-').map(Number),[by,bm]=b.split('-').map(Number);return ay-by||am-bm;})
+  .forEach(k=>{
+    const[y,m]=k.split('-').map(Number);
+    const g=document.createElement('div');g.className='month-group';
+    g.innerHTML=`<div class="month-head">${MONTHS[m]} <span>${y}</span></div>`;
+    const tl=document.createElement('div');tl.className='timeline';
+    groups[k].sort((a,b)=>{const da=parse(a.date)-parse(b.date);return da||tmin(a)-tmin(b);});
+    groups[k].forEach(e=>tl.appendChild(eventRow(e)));
+    g.appendChild(tl);root.appendChild(g);
+  });
+}
+function eventRow(e){
+  const c=CATS[e.cat],d=parse(e.date);
+  const row=document.createElement('div');
+  row.className='event'+(SPECIAL.has(e.cat)?' special':'')+(e.track==='both'?' both':'')+(e.cat==='pause'?' pause':'');
+  row.style.setProperty('--c',c.color);
+  let db;
+  if(e.end){const d2=parse(e.end);
+    db=(d.getMonth()===d2.getMonth())
+      ? `<div class="dow">${DOW[d.getDay()]}–${DOW[d2.getDay()]}</div><div class="dd">${d.getDate()}–${d2.getDate()}</div><div class="range">${MONTHS[d.getMonth()].slice(0,3)}.</div>`
+      : `<div class="dow">${DOW[d.getDay()]}–${DOW[d2.getDay()]}</div><div class="dd">${d.getDate()}.</div><div class="range">bis ${d2.getDate()}. ${MONTHS[d2.getMonth()].slice(0,3)}.</div>`;
+  }else{db=`<div class="dow">${DOW[d.getDay()]}</div><div class="dd">${d.getDate()}</div>`;}
+  const meta=e.time?`<div class="meta">${e.time} Uhr</div>`:(e.end?`<div class="meta">Mehrtägig</div>`:'');
+  const note=e.note?`<div class="note">${e.note}</div>`:'';
+  const link=e.link?`<a class="ev-link" href="${e.link}" target="_blank" rel="noopener">Infos</a>`:'';
+  row.innerHTML=`<div class="date-block">${db}</div>
+    <div class="card${e.hl?' hl':''}">
+      <div class="title-row"><h3>${e.title}</h3>
+        <span class="tag" style="--c:${c.color}">${c.label}</span>${trackTag(e)}</div>
+      ${meta}${note}${link}
+    </div>`;
+  return row;
+}
+
+/* Calendar grid */
+const BOUND_MIN={y:2026,m:8},BOUND_MAX={y:2027,m:6};
+let cur={y:2026,m:8};
+function eventsOnDay(d){
+  return EVENTS.filter(e=>{if(!visible(e))return false;const s=parse(e.date),en=e.end?parse(e.end):s;return d>=s&&d<=en;});
+}
+function renderGrid(){
+  document.getElementById('cal-title').textContent=`${MONTHS[cur.m]} ${cur.y}`;
+  document.getElementById('prev').disabled=(cur.y===BOUND_MIN.y&&cur.m===BOUND_MIN.m);
+  document.getElementById('next').disabled=(cur.y===BOUND_MAX.y&&cur.m===BOUND_MAX.m);
+  const grid=document.getElementById('grid');grid.innerHTML='';
+  ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(w=>{const h=document.createElement('div');h.className='wd';h.textContent=w;grid.appendChild(h);});
+  const first=new Date(cur.y,cur.m,1);let lead=(first.getDay()+6)%7;
+  for(let i=0;i<lead;i++){const c=document.createElement('div');c.className='cell empty';grid.appendChild(c);}
+  const days=new Date(cur.y,cur.m+1,0).getDate();
+  for(let n=1;n<=days;n++){
+    const d=new Date(cur.y,cur.m,n),evs=eventsOnDay(d);
+    const cell=document.createElement('div');cell.className='cell'+(evs.length?' has':'');
+    cell.innerHTML=`<div class="n">${n}</div>`;
+    evs.forEach(e=>{const p=document.createElement('div');
+      p.className='ev-pill'+(e.track==='both'?' both':'')+(e.cat==='pause'?' pause':'');p.style.setProperty('--c',CATS[e.cat].color);
+      p.textContent=e.title;p.title=e.title;cell.appendChild(p);});
+    grid.appendChild(cell);
+  }
+}
+document.getElementById('prev').onclick=()=>{cur.m--;if(cur.m<0){cur.m=11;cur.y--;}renderGrid();};
+document.getElementById('next').onclick=()=>{cur.m++;if(cur.m>11){cur.m=0;cur.y++;}renderGrid();};
+
+/* Open dates */
+function renderOpen(){
+  const el=document.getElementById('open-sec');
+  const list=OPEN.filter(o=>trackFilter==='all'||o.track===trackFilter||o.track==='both');
+  if(!list.length){el.innerHTML='';return;}
+  el.innerHTML=`<h2>Termin noch offen</h2><p class="hint">Diese Termine stehen fest im Programm, das Datum wird noch bekanntgegeben.</p><div class="open-list"></div>`;
+  const wrap=el.querySelector('.open-list');
+  list.forEach(o=>{const c=CATS[o.cat];const item=document.createElement('div');item.className='open-item';
+    item.innerHTML=`<div class="title-row"><span class="tag" style="--c:${c.color}">${c.label}</span>${trackTag(o)}</div>
+      <h3>${o.title}</h3><div class="when">Datum wird noch festgelegt</div>`;
+    wrap.appendChild(item);});
+}
+const _setTrack=setTrack;
+setTrack=function(t){_setTrack(t);renderOpen();};
+
+/* View toggle */
+const tabA=document.getElementById('tab-agenda'),tabC=document.getElementById('tab-cal');
+function setView(cal){tabA.setAttribute('aria-selected',!cal);tabC.setAttribute('aria-selected',cal);
+  document.getElementById('agenda').classList.toggle('hidden',cal);document.getElementById('cal').classList.toggle('active',cal);}
+tabA.onclick=()=>setView(false);tabC.onclick=()=>setView(true);
+
+/* Init */
+countdown();renderLegend();renderAgenda();renderGrid();renderOpen();
+</script>
+</body>
+</html>
